@@ -4,4 +4,4 @@
 # If you change this key, all old signed cookies will become invalid!
 # Make sure the secret is at least 30 characters and all random,
 # no regular words or you'll be exposed to dictionary attacks.
-Armadillo::Application.config.secret_token = 'f364698219e5351acd484b638690b078466b2488c071dbabce4a1b848f3c3558bb05b0443a2117f01ff262d54258a64fe8fd5f827c9226f82693fee4254300fc'
+Armadillo::Application.config.secret_token = '9d387b15322fe9a0cfe209b5ae846bc5755140a3737161d7dacf921f83f0132bf64529309c6e1087755b6b6fd573be3eb92787fc2261ce5352b73b8b68a23267'
