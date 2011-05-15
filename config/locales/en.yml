@@ -3,4 +3,9 @@
 
 en:
   user:
-    create: Sign up!
+    create_link: Sign up
+    create_button: Sign me up!
+
+    create:
+      success:  User created.
+      failure: Failed to create user.
