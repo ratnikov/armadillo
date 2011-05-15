@@ -38,7 +38,6 @@ Feature: Users should be able to authenticate with the site
      Then I should see "session.create.success"
       And I should be logged in
 
-  @wip
   Scenario: Visitor logs out
     Given user "joe@example.com/secret" exists
       And I am logged in as "joe@example.com/secret"

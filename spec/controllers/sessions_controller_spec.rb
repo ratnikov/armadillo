@@ -16,6 +16,8 @@ describe SessionsController do
 
       flash[:success].should_not be_nil
       should redirect_to('/')
+
+      controller.signed_in?.should be_true
     end
       
     it "should render error for invalid password" do
@@ -30,6 +32,17 @@ describe SessionsController do
 
       flash[:failure].should_not be_nil
       should render_template('new')
+    end
+  end
+
+  describe "#destroy" do
+    it "should reset the session on success" do
+      delete :destroy, { }, :user_id => Factory.create(:user)
+
+      controller.signed_in?.should be_false
+      should redirect_to("/")
+
+      flash[:success].should_not be_nil
     end
   end
 end

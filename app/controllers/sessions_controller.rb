@@ -11,4 +11,12 @@ class SessionsController < ApplicationController
       render :action => 'new'
     end
   end
+
+  def destroy
+    sign_out
+
+    flash[:success] = translate('session.destroy.success')
+
+    redirect_back_or root_path
+  end
 end
