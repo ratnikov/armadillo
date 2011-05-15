@@ -1,6 +1,6 @@
 <h1><%= t 'sessions.new' %></h1>
 
-<%= form_for :session do |f| %>
+<%= form_for :session, :url => session_path do |f| %>
   <%= f.label :email %>
   <%= f.text_field :email %>
 

@@ -14,5 +14,6 @@ group :development, :test do
   gem 'capybara'
   gem 'database_cleaner'
 
-  gem 'factory_girl'#, :git => 'git://github.com/thoughtbot/factory_girl.git'
+  gem 'factory_girl'
+  gem 'launchy'
 end

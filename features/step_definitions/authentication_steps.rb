@@ -1,7 +1,7 @@
 Then /^I should be logged in$/ do
-  # no logging in defined yet
+  Then %{I should see "session.destroy_link" link}
 end
 
 Then /^I should not be logged in$/ do
-  # another dummy step for the future
+  Then %{I should see "session.create_link" link}
 end

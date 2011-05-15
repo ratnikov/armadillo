@@ -10,6 +10,8 @@ en:
       success: Successfully logged in.
       failure: Bad email or password.
 
+    destroy_link: Log out
+
   user:
     create_link: Sign up
     create_button: Sign me up!
