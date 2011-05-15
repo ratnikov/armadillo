@@ -1,6 +1,5 @@
 Feature: Users should be able to sign up
 
-  @wip
   Scenario: User signs up with valid info
     Given I am on the home page
       And I follow "user.create"
