@@ -8,11 +8,17 @@
 </head>
 <body>
 
+  <ul id="flash">
+    <% flash.each do |type, message| -%>
+      <%= content_tag :li, h(message), :class => h(type) %>
+    <% end -%>
+  </ul>
+
   <ul id="nav">
     <li><%= link_to t('user.create'), new_user_path %></li>
   </ul>
 
-<%= yield %>
+  <%= yield %>
 
 </body>
 </html>
