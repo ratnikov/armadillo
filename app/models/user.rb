@@ -5,6 +5,8 @@ class User < ActiveRecord::Base
 
   validate :confirmation_match
 
+  attr_accessible :email, :password, :confirmation
+
   private
 
   def confirmation_match
