@@ -29,7 +29,6 @@ Feature: Users should be able to sign up
      Then I should see "user.create.failure"
       And I should not be logged in
 
-  @wip
   Scenario: User sign ups with non-matching confirmation
     Given I am on the home page
       And I follow "user.create_link"
