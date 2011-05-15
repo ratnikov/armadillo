@@ -1,7 +1,3 @@
-When /^I am on the home page$/ do
-  When %{I visit "/"}
-end
-
 When /^I visit "(.*)"$/ do |url|
   visit url
 end
