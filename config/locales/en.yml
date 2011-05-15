@@ -9,3 +9,6 @@ en:
     create:
       success:  User created.
       failure: Failed to create user.
+
+    errors:
+      no_confirmation_match: does not match password
