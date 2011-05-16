@@ -1,4 +1,9 @@
 class SessionsController < ApplicationController
+  skip_before_filter :authorize, :only => [ :new, :create, :destroy ]
+
+  def new
+  end
+
   def create
     if user = Session.new(params[:session]).user
       sign_in user
