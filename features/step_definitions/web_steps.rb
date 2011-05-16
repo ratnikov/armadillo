@@ -8,10 +8,11 @@
 require 'uri'
 require 'cgi'
 require File.expand_path(File.join(File.dirname(__FILE__), "..", "support", "paths"))
+require File.expand_path(File.join(File.dirname(__FILE__), "..", "support", "selectors"))
 
 module WithinHelpers
   def with_scope(locator)
-    locator ? within(locator) { yield } : yield
+    locator ? within(*selector_for(locator)) { yield } : yield
   end
 
   def try_translate(text)
@@ -21,6 +22,18 @@ module WithinHelpers
   end
 end
 World(WithinHelpers)
+
+# Single-line step scoper
+When /^(.*) within ([^:]+)$/ do |step, parent|
+  with_scope(parent) { When step }
+end
+
+# Multi-line step scoper
+When /^(.*) within ([^:]+):$/ do |step, parent, table_or_string|
+  with_scope(parent) { When "#{step}:", table_or_string }
+end
+
+
 
 Given /^(?:|I )am on (.+)$/ do |page_name|
   visit path_to(page_name)
@@ -34,28 +47,20 @@ When /^(?:|I )go to the home\s?page$/ do
   visit '/'
 end
 
-When /^(?:|I )press "([^"]*)"(?: within "([^"]*)")?$/ do |button, selector|
-  with_scope(selector) do
-    click_button try_translate(button)
-  end
+When /^(?:|I )press "([^"]*)"$/ do |button|
+  click_button try_translate(button)
 end
 
-When /^(?:|I )follow "([^"]*)"(?: within "([^"]*)")?$/ do |link, selector|
-  with_scope(selector) do
-    click_link try_translate(link)
-  end
+When /^(?:|I )follow "([^"]*)"$/ do |link|
+  click_link try_translate(link)
 end
 
-When /^(?:|I )fill in "([^"]*)" with "([^"]*)"(?: within "([^"]*)")?$/ do |field, value, selector|
-  with_scope(selector) do
-    fill_in(try_translate(field), :with => value)
-  end
+When /^(?:|I )fill in "([^"]*)" with "([^"]*)"$/ do |field, value|
+  fill_in(try_translate(field), :with => value)
 end
 
-When /^(?:|I )fill in "([^"]*)" for "([^"]*)"(?: within "([^"]*)")?$/ do |value, field, selector|
-  with_scope(selector) do
-    fill_in(try_translate(field), :with => value)
-  end
+When /^(?:|I )fill in "([^"]*)" for "([^"]*)"$/ do |value, field|
+  fill_in(try_translate(field), :with => value)
 end
 
 # Use this to fill in an entire form with data from a table. Example:
@@ -69,42 +74,30 @@ end
 # TODO: Add support for checkbox, select og option
 # based on naming conventions.
 #
-When /^(?:|I )fill in the following(?: within "([^"]*)")?:$/ do |selector, fields|
-  with_scope(selector) do
-    fields.rows_hash.each do |name, value|
-      When %{I fill in "#{name}" with "#{value}"}
-    end
+When /^(?:|I )fill in the following:$/ do |fields|
+  fields.rows_hash.each do |name, value|
+    When %{I fill in "#{name}" with "#{value}"}
   end
 end
 
-When /^(?:|I )select "([^"]*)" from "([^"]*)"(?: within "([^"]*)")?$/ do |value, field, selector|
-  with_scope(selector) do
-    select(try_translate(value), :from => field)
-  end
+When /^(?:|I )select "([^"]*)" from "([^"]*)"$/ do |value, field|
+  select(try_translate(value), :from => field)
 end
 
-When /^(?:|I )check "([^"]*)"(?: within "([^"]*)")?$/ do |field, selector|
-  with_scope(selector) do
-    check try_translate(field)
-  end
+When /^(?:|I )check "([^"]*)"$/ do |field|
+  check try_translate(field)
 end
 
-When /^(?:|I )uncheck "([^"]*)"(?: within "([^"]*)")?$/ do |field, selector|
-  with_scope(selector) do
-    uncheck try_translate(field)
-  end
+When /^(?:|I )uncheck "([^"]*)"$/ do |field|
+  uncheck try_translate(field)
 end
 
-When /^(?:|I )choose "([^"]*)"(?: within "([^"]*)")?$/ do |field, selector|
-  with_scope(selector) do
-    choose try_translate(field)
-  end
+When /^(?:|I )choose "([^"]*)"$/ do |field|
+  choose try_translate(field)
 end
 
-When /^(?:|I )attach the file "([^"]*)" to "([^"]*)"(?: within "([^"]*)")?$/ do |path, field, selector|
-  with_scope(selector) do
-    attach_file(try_translate(field), path)
-  end
+When /^(?:|I )attach the file "([^"]*)" to "([^"]*)"$/ do |path, field|
+  attach_file(try_translate(field), path)
 end
 
 Then /^(?:|I )should see JSON:$/ do |expected_json|
@@ -115,105 +108,54 @@ Then /^(?:|I )should see JSON:$/ do |expected_json|
   actual.should == expected
 end
 
-Then /^(?:|I )should see "([^"]*)"(?: within "([^"]*)")?$/ do |text, selector|
-  with_scope(selector) do
-    if page.respond_to? :should
-      page.should have_content(try_translate(text))
-    else
-      assert page.has_content?(try_translate(text))
-    end
-  end
+Then /^(?:|I )should see "([^"]*)"$/ do |text|
+  page.should have_content(try_translate(text))
 end
 
-Then /^(?:|I )should see \/([^\/]*)\/(?: within "([^"]*)")?$/ do |regexp, selector|
+Then /^(?:|I )should see \/([^\/]*)\/$/ do |regexp|
   regexp = Regexp.new(regexp)
-  with_scope(selector) do
-    if page.respond_to? :should
-      page.should have_xpath('//*', :text => regexp)
-    else
-      assert page.has_xpath?('//*', :text => regexp)
-    end
-  end
+  page.should have_xpath('//*', :text => regexp)
 end
 
-Then /^(?:|I )should not see "([^"]*)"(?: within "([^"]*)")?$/ do |text, selector|
-  with_scope(selector) do
-    if page.respond_to? :should
-      page.should have_no_content(try_translate(text))
-    else
-      assert page.has_no_content?(try_translate(text))
-    end
-  end
+Then /^(?:|I )should not see "([^"]*)"$/ do |text|
+  page.should have_no_content(try_translate(text))
 end
 
-Then /^(?:|I )should not see \/([^\/]*)\/(?: within "([^"]*)")?$/ do |regexp, selector|
+Then /^(?:|I )should not see \/([^\/]*)\/$/ do |regexp|
   regexp = Regexp.new(regexp)
-  with_scope(selector) do
-    if page.respond_to? :should
-      page.should have_no_xpath('//*', :text => regexp)
-    else
-      assert page.has_no_xpath?('//*', :text => regexp)
-    end
-  end
+  page.should have_no_xpath('//*', :text => regexp)
 end
 
-Then /^the "([^"]*)" field(?: within "([^"]*)")? should contain "([^"]*)"$/ do |field, selector, value|
-  with_scope(selector) do
-    field = find_field field
-    field_value = (field.tag_name == 'textarea') ? field.text : field.value
-    if field_value.respond_to? :should
-      field_value.should =~ /#{value}/
-    else
-      assert_match(/#{value}/, field_value)
-    end
-  end
+Then /^the "([^"]*)" field should contain "([^"]*)"$/ do |field, value|
+  field = find_field field
+  field_value = (field.tag_name == 'textarea') ? field.text : field.value
+  field_value.should =~ /#{value}/
 end
 
-Then /^the "([^"]*)" field(?: within "([^"]*)")? should not contain "([^"]*)"$/ do |field, selector, value|
-  with_scope(selector) do
+Then /^the "([^"]*)" field should not contain "([^"]*)"$/ do |field, value|
+  field = find_field try_translate(field)
+  field_value = (field.tag_name == 'textarea') ? field.text : field.value
+  field_value.should_not =~ /#{value}/
+end
+
+Then /^the "([^"]*)" field should be blank$/ do |field|
     field = find_field try_translate(field)
     field_value = (field.tag_name == 'textarea') ? field.text : field.value
-    if field_value.respond_to? :should_not
-      field_value.should_not =~ /#{value}/
-    else
-      assert_no_match(/#{value}/, field_value)
-    end
-  end
-end
-
-Then /^the "([^"]*)" field(?: within "([^"]*)")? should be blank$/ do |field, selector|
-  with_scope(selector) do
-    field = find_field try_translate(field)
-    field_value = (field.tag_name == 'textarea') ? field.text : field.value
-
     field_value.should be_nil
-  end
 end
 
 
 
-Then /^the "([^"]*)" checkbox(?: within "([^"]*)")? should be checked$/ do |label, selector|
-  with_scope(selector) do
-    field_checked = find_field(try_translate(label))['checked']
-    if field_checked.respond_to? :should
-      field_checked.should be_true
-    else
-      assert field_checked
-    end
-  end
+Then /^the "([^"]*)" checkbox should be checked$/ do |label|
+  field_checked = find_field(try_translate(label))['checked']
+  field_checked.should be_true
 end
 
-Then /^the "([^"]*)" checkbox(?: within "([^"]*)")? should not be checked$/ do |label, selector|
-  with_scope(selector) do
-    field_checked = find_field(try_translate(label))['checked']
-    if field_checked.respond_to? :should
-      field_checked.should be_false
-    else
-      assert !field_checked
-    end
-  end
+Then /^the "([^"]*)" checkbox should not be checked$/ do |label|
+  field_checked = find_field(try_translate(label))['checked']
+  field_checked.should be_false
 end
- 
+
 Then /^(?:|I )should be on (.+)$/ do |page_name|
   current_path = URI.parse(current_url).path
   if current_path.respond_to? :should
@@ -228,7 +170,7 @@ Then /^(?:|I )should have the following query string:$/ do |expected_pairs|
   actual_params = query ? CGI.parse(query) : {}
   expected_params = {}
   expected_pairs.rows_hash.each_pair{|k,v| expected_params[k] = v.split(',')} 
-  
+
   if actual_params.respond_to? :should
     actual_params.should == expected_params
   else
