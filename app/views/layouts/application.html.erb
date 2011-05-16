@@ -16,11 +16,12 @@
 
   <ul id="nav">
     <% if signed_in? -%>
+      <li><%= link_to t('filter.list'), filters_path %></li>
       <li><%= link_to t('session.destroy_link'), logout_path %></li>
     <% else -%>
       <li><%= link_to t('session.create_link'), login_path %></li>
+      <li><%= link_to t('user.create_link'), new_user_path %></li>
     <% end -%>
-    <li><%= link_to t('user.create_link'), new_user_path %></li>
   </ul>
 
   <%= yield %>

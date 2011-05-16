@@ -2,6 +2,13 @@
 # See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
+  filter:
+    list: My filters
+
+    create:
+      success: Filter created.
+      failure: Failed to create filter.
+
   session:
     create_link: Login
     create_button: Log me in

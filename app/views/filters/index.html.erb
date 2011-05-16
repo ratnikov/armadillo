@@ -1,0 +1,8 @@
+<h1><%= t 'filter.list' %></h1>
+
+<%= form_for Filter.new do |f| -%>
+  <%= f.label :query %>
+  <%= f.text_field :query %>
+
+  <%= f.submit 'filter.create_button' %>
+<% end -%>
