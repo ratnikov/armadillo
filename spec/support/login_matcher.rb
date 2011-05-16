@@ -1,6 +1,8 @@
 RSpec::Matchers.define :require_login_for do |*actions|
   match do 
     actions.each do |action|
+      controller.current_user = nil
+
       case action
       when :index, :new, :show, :edit
         get action

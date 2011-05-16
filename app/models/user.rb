@@ -7,6 +7,8 @@ class User < ActiveRecord::Base
 
   attr_accessible :email, :password, :confirmation
 
+  has_many :filters
+
   private
 
   def confirmation_match
