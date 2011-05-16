@@ -25,3 +25,12 @@ Feature: Users should be able to create filters to watch for a deal
 
     Then I should see "filter.create.failure"
      And I should see "errors.messages.blank"
+
+  Scenario: A user removes a deal filter
+   Given I create "laptops" deal filter
+
+    When I follow "filter.list"
+     And I press "filter.destroy_button" within "laptops" filter
+
+     Then I should see "filter.destroy.success"
+      And filter "laptops" should not exist

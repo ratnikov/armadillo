@@ -20,4 +20,18 @@ class FiltersController < ApplicationController
       render :action => 'new'
     end
   end
+
+  def destroy
+    filter.destroy
+
+    flash[:success] = translate('filter.destroy.success')
+
+    redirect_to filters_path
+  end
+
+  private
+
+  def filter
+    Filter.find params[:id]
+  end
 end

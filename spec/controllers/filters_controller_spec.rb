@@ -45,4 +45,15 @@ describe FiltersController do
       should render_template('new')
     end
   end
+
+  describe "#destroy" do
+    before do
+      @filter = Factory.create :filter, :user => @user
+
+      delete :destroy, :id => @filter.to_param
+    end
+
+    it { Filter.exists?(@filter).should be_false }
+    it { should redirect_to(filters_path) }
+  end
 end

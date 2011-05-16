@@ -1,4 +1,6 @@
 module HtmlSelectorsHelpers
+  include ActionController::RecordIdentifier
+
   # Maps a name to a selector. Used primarily by the
   #
   #   When /^(.+) within (.+)$/ do |step, scope|
@@ -10,6 +12,9 @@ module HtmlSelectorsHelpers
 
     when /the page/
       "html > body"
+
+    when /"(.*)" filter/
+      "#%s" % dom_id(Filter.find_by_query($1))
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:

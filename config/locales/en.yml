@@ -9,6 +9,11 @@ en:
       success: Filter created.
       failure: Failed to create filter.
 
+    destroy_button: Delete
+
+    destroy:
+      success: Filter deleted.
+
   session:
     create_link: Login
     create_button: Log me in

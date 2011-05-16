@@ -2,7 +2,12 @@
 
 <ul>
   <% @filters.each do |filter| -%>
-    <li><%= h filter.query %></li>
+    <%= content_tag :li, :id => dom_id(filter) do -%>
+      <%= h filter.query %>
+      <%= form_for :filter, :url => filter, :html => { :method => :delete } do |f| %>
+        <%= f.submit t('filter.destroy_button') %>
+      <% end -%>
+    <% end -%>
   <% end -%>
 </ul>
 
