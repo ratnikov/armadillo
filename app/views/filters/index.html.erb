@@ -1,5 +1,11 @@
 <h1><%= t 'filter.list' %></h1>
 
+<ul>
+  <% @filters.each do |filter| -%>
+    <li><%= h filter.query %></li>
+  <% end -%>
+</ul>
+
 <%= form_for Filter.new do |f| -%>
   <%= f.label :query %>
   <%= f.text_field :query %>
