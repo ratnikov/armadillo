@@ -20,6 +20,13 @@ describe FiltersController do
     it { should render_template('index') }
   end
 
+  describe "#new" do
+    before { get :new }
+
+    it { assigns(:filter).should be_instance_of(Filter) }
+    it { should render_template('new') }
+  end
+
   describe '#create' do
     context "with valid data" do
       before { post :create, :filter => { :query => 'laptops' } }
@@ -35,7 +42,7 @@ describe FiltersController do
     it "should render index template on error" do
       post :create, :filter => { }
 
-      should render_template('index')
+      should render_template('new')
     end
   end
 end

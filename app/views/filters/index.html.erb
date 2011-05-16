@@ -7,8 +7,5 @@
 </ul>
 
 <%= form_for Filter.new do |f| -%>
-  <%= f.label :query %>
-  <%= f.text_field :query %>
-
-  <%= f.submit 'filter.create_button' %>
+  <%= render :partial => 'form', :locals => { :form => f } %>
 <% end -%>

@@ -3,6 +3,10 @@ class FiltersController < ApplicationController
     @filters = current_user.filters
   end
 
+  def new
+    @filter = current_user.filters.build
+  end
+
   def create
     @filter = current_user.filters.build params[:filter]
 
@@ -13,7 +17,7 @@ class FiltersController < ApplicationController
     else
       flash[:failure] = translate('filter.create.failure')
 
-      render :action => 'index'
+      render :action => 'new'
     end
   end
 end

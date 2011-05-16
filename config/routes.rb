@@ -1,6 +1,6 @@
 
 Armadillo::Application.routes.draw do
-  resources :filters, :only => [ :index, :create ]
+  resources :filters, :only => [ :index, :new, :create ]
   resources :users, :only => [ :create, :destroy ]
   match '/signup' =>'users#new', :as => :new_user
 

@@ -1,0 +1,5 @@
+<h1><%= t 'filter.new' %></h1>
+
+<%= form_for @filter do |f| -%>
+  <%= render :partial => 'form', :locals => { :form => f } %>
+<% end -%>
