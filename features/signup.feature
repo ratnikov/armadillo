@@ -27,6 +27,7 @@ Feature: Users should be able to sign up
       And I press "user.create_button"
 
      Then I should see "user.create.failure"
+      And I should see "activerecord.errors.messages.taken"
       And I should not be logged in
 
   Scenario: User sign ups with non-matching confirmation
@@ -41,4 +42,5 @@ Feature: Users should be able to sign up
       And I press "user.create_button"
 
      Then I should see "user.create.failure"
+      And I should see "user.errors.no_confirmation_match"
       And I should not be logged in
